@@ -1,4 +1,5 @@
 from utils.file_operation import FileOperator
+import numpy as np
 
 train_ratio = 0.8
 
