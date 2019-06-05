@@ -1,8 +1,6 @@
 from utils.file_operation import FileOperator
-import numpy as np
 
 train_ratio = 0.8
-
 if __name__ == '__main__':
     file_operator = FileOperator()
     csv_file = file_operator

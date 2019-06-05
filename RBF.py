@@ -30,3 +30,7 @@ class RBF:
     # L =  1/2 * (transpose(Y' - Y)) * (Y' - Y)
     def calculate_error(self):
         self.Loss = 1 / 2 * (np.transpose(np.subtract(self.Y_prime, self.Y)) * (np.subtract(self.Y_prime, self.Y)))
+
+    def calculate_weights(self):
+        self.W = np.linalg.inv(np.transpose(self.G) * self.G) * np.transpose(self.G) * self.Y
+
