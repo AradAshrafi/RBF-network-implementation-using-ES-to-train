@@ -5,7 +5,7 @@ functionality of this program :
     X contains inputs <br/>
     X =[ (X<sup>1</sup>) &nbsp; ... &nbsp;(X<sup>L</sup>)]<br/>
     G is matrix which contains g<sub>i</sub>(X<sup>j</sup>) (which are outputs of each RBF node) <br/>
-    **g<sub>i</sub> = e <sup>i(-‫γ‬<sub>i</sub> (X - V<sub>i</sub>)^T(X-V<sub>i</sub>))**</sup> &nbsp; &nbsp; &nbsp; ‫γ<sub>i</sub>‬ is i<sup>th</sup> constant and V<sub>i</sub> is i<sup>th</sup> center <br/>
+    **g<sub>i</sub> = e <sup>(-‫γ‬<sub>i</sub> (X - V<sub>i</sub>)^T(X-V<sub>i</sub>))**</sup> &nbsp; &nbsp; &nbsp; ‫γ<sub>i</sub>‬ is i<sup>th</sup> constant and V<sub>i</sub> is i<sup>th</sup> center <br/>
     G = [ g<sub>1</sub>(X<sup>1</sup>) &nbsp; ... &nbsp; g<sub>m</sub>(X<sup>1</sup>)<br/>
         &nbsp; &nbsp; &nbsp; &nbsp; .<br/> 
         &nbsp; &nbsp; &nbsp; &nbsp; .<br/>

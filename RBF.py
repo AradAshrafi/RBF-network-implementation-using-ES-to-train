@@ -17,6 +17,7 @@ class RBF:
         self.Y_prime = []  # calculated output
         self.Loss = 0  # Error of last step
 
+    # calculate G matrix based on formula written in README.md file
     def calculate_G_matrix(self):
         for j in range(len(self.X)):
             for i in range(len(self.V)):
@@ -33,4 +34,3 @@ class RBF:
 
     def calculate_weights(self):
         self.W = np.linalg.inv(np.transpose(self.G) * self.G) * np.transpose(self.G) * self.Y
-
