@@ -2,7 +2,7 @@ import random
 from RBF import RBF
 import numpy as np
 
-mutation_prob = 0.4
+mutation_prob = 0.45
 crossover_prob = 0.8
 
 
@@ -22,7 +22,7 @@ def ES(train_data_input, train_data_output, MU, LAMBDA):
         __do_required_calculation_to_determine_loss(rbf=rbf)
 
     # MAIN LOOP OF EVOLUTIONARY STRATEGY ------------------------>
-    for i in range(200):
+    for i in range(6):
         print("iteration" + str(i))
         # now it's time to generate next generations and perform Evolutionary Strategy
         new_generation = __generate_new_generation(array_of_RBFS=array_of_RBFS, MU=MU, LAMBDA=LAMBDA,
@@ -37,6 +37,7 @@ def ES(train_data_input, train_data_output, MU, LAMBDA):
 
         for remained_child in array_of_RBFS:
             print(remained_child.Loss)
+        print()
 
     array_of_RBFS.sort(key=lambda x: x.Loss, reverse=False)
     return array_of_RBFS[0]
@@ -47,7 +48,7 @@ def __do_required_calculation_to_determine_loss(rbf):
     rbf.calculate_G_matrix()
     # then we calculate weights based on G matrix [formula is written in README ]
     rbf.calculate_weights()
-    # then we calculate output with current G and W (y = GW) [formula is written in README :D ]
+    # then we calculate output with current G and W (y_prime = GW) [formula is written in README :D ]
     rbf.calculate_output()
     # in the end we calculate error based on loss function defined in README
     rbf.calculate_error()

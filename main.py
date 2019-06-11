@@ -10,6 +10,17 @@ MU = 10
 # ------ if you want to decrease the LAMBDA to be less than 2*MU beware to apply desired changes in ES codes ------ #
 LAMBDA = 7 * MU
 
+
+def test_accuracy(RBF_model, test_data_input, test_data_output):
+    RBF_model.set_input(RBF_input=test_data_input)
+    RBF_model.set_output(RBF_output=test_data_output)
+    # first we calculate G matrix based on centers(v) and gama [formula is written in README ]
+    RBF_model.calculate_G_matrix()
+    RBF_model.calculate_output()
+    RBF_model.normalize_output()
+    print(test_data_output, RBF_model.Y_prime)
+
+
 if __name__ == '__main__':
     # to read from csv file and put into an array
     file_operator = FileOperator()
@@ -22,3 +33,4 @@ if __name__ == '__main__':
     RBF_output = np.asarray(train_data_output)
 
     trained_model = ES(train_data_input=train_data_input, train_data_output=train_data_output, MU=MU, LAMBDA=LAMBDA)
+    test_accuracy(RBF_model=trained_model, test_data_input=train_data_input, test_data_output=train_data_output)

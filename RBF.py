@@ -24,12 +24,6 @@ class RBF:
         self.Y_prime = []  # calculated output
         self.Loss = 0  # Error of last step
 
-    def set_input(self, RBF_input):
-        self.X = RBF_input
-
-    def set_output(self, RBF_output):
-        self.X = RBF_output
-
     # it returns chromosome of current RBF :)
     # our chromosomes are V and GAMA
     def get_chromosome(self):
@@ -52,9 +46,20 @@ class RBF:
 
     # L =  1/2 * (transpose(Y' - Y)) * (Y' - Y)
     def calculate_error(self):
-        self.Loss = np.dot((self.Y_prime - self.Y).T, (self.Y_prime - self.Y))
+        self.Loss = 1 / 2 * np.dot((self.Y_prime - self.Y).T, (self.Y_prime - self.Y))
 
-    # Calculate Weights Matrix  based on formula written
+    # Calculate Weights Matrix based on formula written
     def calculate_weights(self):
         self.W = np.dot(np.dot(np.linalg.inv(np.dot(self.G.T, self.G)), self.G.T), self.Y)
 
+    # for testing time ---------------------------------------------------------------------------->
+    def set_input(self, RBF_input):
+        self.X = RBF_input
+        # self.G = np.zeros((len(self.X), len(self.V)))
+
+    def set_output(self, RBF_output):
+        self.X = RBF_output
+
+    def normalize_output(self):
+        for i in range(len(self.Y_prime)):
+            self.Y_prime[i] = 1 if self.Y_prime[i] > 0.5 else 0
