@@ -25,6 +25,6 @@ functionality of this program :
  
     L is our loss function (to calculate error) <br/>
     ‫‪L(ŷ,y) = 1/2 - (ŷ - y)<sup>T</sup>(ŷ - y)
- - [ ] Evolution Strategy algorithm with V(vector) and ‫‫‫‫‫‫‫γ(scalar) parameters
+ - [x] Evolution Strategy algorithm with V(vector) and ‫‫‫‫‫‫‫γ(scalar) parameters
  - [ ] Show Results with current Architecture for Regression Problem
  - [ ] Show Results with current Architecture for Classification Problem

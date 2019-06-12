@@ -1,11 +1,19 @@
-from .data_location import TWO_CLASSES_PATH
+from .data_location import TWO_CLASSES_PATH, MULTI_CLASSES_PATH, REGRESSION_PATH
 import pandas
-import logging
+import random
+import numpy as np
 
 
 class FileOperator:
-    def __init__(self, path=TWO_CLASSES_PATH):
-        self.path = path
+    def __init__(self, mode="regression"):
+        self.path = ""
+        # select path based on our mode
+        if mode == "regression":
+            self.path = REGRESSION_PATH
+        elif mode == "two_class":
+            self.path = TWO_CLASSES_PATH
+        else:
+            self.path = MULTI_CLASSES_PATH
 
     # read from specified CSV file
     def __read_from_file(self):
@@ -23,9 +31,10 @@ class FileOperator:
     # determine test and train data from read CSV file
     def get_test_train_data(self, train_ratio):
         data = self.__read_from_file()
-        data_len = data.__len__()
+        data_len = len(data)
+        np.random.shuffle(data)
         X_train, Y_train = separate_input_output(data[:int(data_len * train_ratio)])
-        X_test, Y_test = separate_input_output(data[int(train_ratio * data_len):])
+        X_test, Y_test = separate_input_output(data)
         return X_train, Y_train, X_test, Y_test
 
 

@@ -22,7 +22,7 @@ def ES(train_data_input, train_data_output, MU, LAMBDA):
         __do_required_calculation_to_determine_loss(rbf=rbf, RBF_input=train_data_input, RBF_output=train_data_output)
 
     # MAIN LOOP OF EVOLUTIONARY STRATEGY ------------------------>
-    for i in range(150):
+    for i in range(100):
         print("iteration" + str(i))
         # now it's time to generate next generations and perform Evolutionary Strategy
         # parents will be chosen randomly
@@ -36,7 +36,6 @@ def ES(train_data_input, train_data_output, MU, LAMBDA):
 
         for remained_child in array_of_RBFS:
             print(remained_child.Loss)
-        print()
 
     array_of_RBFS.sort(key=lambda x: x.Loss, reverse=False)
     return array_of_RBFS[0]
@@ -57,6 +56,10 @@ def __do_required_calculation_to_determine_loss(rbf, RBF_input=None, RBF_output=
     rbf.calculate_output()
     # in the end we calculate error based on loss function defined in README
     rbf.calculate_error()
+
+    # make them release MEMORY :)) ---------------------------------------------
+    rbf.set_input(None)
+    rbf.set_output(None)
 
 
 # my way of creating new generation :
@@ -98,7 +101,7 @@ def __mutation(chromosome):
         for i in range(2):
             # change one amount in gama vector
             index = random.randint(0, len(chromosome[0]) - 1)
-            chromosome[0][index] = np.multiply(chromosome[0][index], random.uniform(0.5, 1.5))
+            chromosome[0][index] = np.multiply(chromosome[0][index], random.uniform(0.2, 2))
 
             # change one amount in V vector
             index = random.randint(0, len(chromosome[1]) - 1)
@@ -122,5 +125,5 @@ def __evolution_selection_q_tournament(population_before_selection, RBF_input, R
         selected_population.append(opponents[0])
     return selected_population
 
+# maybe for future I add SUS with rankings:D
 # def __SUS_with_ranking():
-#     print()
