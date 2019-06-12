@@ -22,14 +22,15 @@ def ES(train_data_input, train_data_output, MU, LAMBDA):
         __do_required_calculation_to_determine_loss(rbf=rbf)
 
     # MAIN LOOP OF EVOLUTIONARY STRATEGY ------------------------>
-    for i in range(6):
+    for i in range(150):
         print("iteration" + str(i))
         # now it's time to generate next generations and perform Evolutionary Strategy
+        # parents will be chosen randomly
         new_generation = __generate_new_generation(array_of_RBFS=array_of_RBFS, MU=MU, LAMBDA=LAMBDA,
                                                    RBF_input=train_data_input, RBF_output=train_data_output)
-        for new_child in new_generation:
-            # to calculate proper inner amounts (like Loss) in RBF based on determined procedure
-            __do_required_calculation_to_determine_loss(rbf=new_child)
+        # for new_child in new_generation:
+        #     # to calculate proper inner amounts (like Loss) in RBF based on determined procedure
+        #     __do_required_calculation_to_determine_loss(rbf=new_child)
 
         # new Chromosomes will take place of current ones :(
         # Dream Theater - This Is The Life
@@ -44,6 +45,10 @@ def ES(train_data_input, train_data_output, MU, LAMBDA):
 
 
 def __do_required_calculation_to_determine_loss(rbf):
+    # this checking statement is useful in picking new generation
+    # if rbf.Loss isn't 0 it means that we have calculated this chromosome loss before
+    if rbf.Loss != 0:
+        return
     # first we calculate G matrix based on centers(v) and gama [formula is written in README ]
     rbf.calculate_G_matrix()
     # then we calculate weights based on G matrix [formula is written in README ]
@@ -108,12 +113,17 @@ def __evolution_selection(new_generation, MU):
     return __q_tournament(population_before_selection=new_generation, Q=3, ns=MU)
 
 
+# perform q tournament
 def __q_tournament(population_before_selection, Q, ns):
     selected_population = []
     for i in range(ns):
         opponents = []
         for j in range(Q):
-            opponents.append(population_before_selection[random.randint(0, len(population_before_selection) - 1)])
+            opponent = population_before_selection[random.randint(0, len(population_before_selection) - 1)]
+            # calculate loss of selected child
+            __do_required_calculation_to_determine_loss(opponent)
+            opponents.append(opponent)
+        # best competitor will be chosen to stay alive
         opponents.sort(key=lambda x: x.Loss, reverse=False)
         selected_population.append(opponents[0])
     return selected_population

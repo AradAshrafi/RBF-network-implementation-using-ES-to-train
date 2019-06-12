@@ -1,5 +1,6 @@
 from .data_location import TWO_CLASSES_PATH
 import pandas
+import logging
 
 
 class FileOperator:
@@ -8,8 +9,16 @@ class FileOperator:
 
     # read from specified CSV file
     def __read_from_file(self):
-        df = pandas.read_csv(self.path)
-        return df.values
+        try:
+            df = pandas.read_csv(self.path)
+            return df.values
+
+        except:
+            try:
+                df = pandas.read_excel(self.path)
+                return df.values
+            except:
+                raise
 
     # determine test and train data from read CSV file
     def get_test_train_data(self, train_ratio):

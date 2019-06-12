@@ -18,7 +18,13 @@ def test_accuracy(RBF_model, test_data_input, test_data_output):
     RBF_model.calculate_G_matrix()
     RBF_model.calculate_output()
     RBF_model.normalize_output()
-    print(test_data_output, RBF_model.Y_prime)
+    accuracy_counter = 0
+    for i in range(len(trained_model.Y_prime)):
+        if trained_model.Y_prime[i] == test_data_output[i]:
+            accuracy_counter += 1
+
+    accuracy = accuracy_counter / len(test_data_output)
+    print(accuracy)
 
 
 if __name__ == '__main__':
@@ -33,4 +39,4 @@ if __name__ == '__main__':
     RBF_output = np.asarray(train_data_output)
 
     trained_model = ES(train_data_input=train_data_input, train_data_output=train_data_output, MU=MU, LAMBDA=LAMBDA)
-    test_accuracy(RBF_model=trained_model, test_data_input=train_data_input, test_data_output=train_data_output)
+    test_accuracy(RBF_model=trained_model, test_data_input=test_data_input, test_data_output=test_data_output)
