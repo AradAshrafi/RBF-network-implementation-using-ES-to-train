@@ -66,12 +66,21 @@ class RBF:
     def set_output(self, RBF_output):
         self.Y = RBF_output
 
-    def normalize_output(self, number_of_classes=2):
-        if number_of_classes == 2:
+    def normalize_output(self, mode="two_class"):
+        if mode == "two_class":
             for i in range(len(self.Y_prime)):
                 self.Y_prime[i] = 1 if self.Y_prime[i] > 0 else -1
         else:
-            print()
+            corrected_classes = []
+            number_of_classes = max(self.Y)
+            for i in range(len(self.Y_prime)):
+                current_label = int(self.Y_prime[i] + 0.2)
+                if current_label < 1:
+                    current_label = 1
+                if current_label > number_of_classes:
+                    current_label = number_of_classes
+                corrected_classes.append(current_label)
+            self.Y_prime = np.array(corrected_classes)
 
     # We Have Two Modes Here :
     # 1-linear Regression
@@ -89,15 +98,15 @@ class RBF:
             self.__plot_regression_accuracy()
         else:
             # then we normalize our output
-            self.normalize_output()
-            self.__plot_classification_accuracy()
+            self.normalize_output(mode)
+            self.__plot_classification_accuracy(mode=mode)
 
     def __plot_regression_accuracy(self):
         plt.plot(self.Y, color="g")
         plt.plot(self.Y_prime, color="b")
         plt.show()
 
-    def __plot_classification_accuracy(self):
+    def __plot_classification_accuracy(self, mode="two_class"):
         accuracy_counter = 0
         correct_X = []
         correct_Y = []
@@ -114,11 +123,16 @@ class RBF:
                 accuracy_counter += 1
                 correct_X.append(self.X[i][0])
                 correct_Y.append(self.X[i][1])
+                if mode != "two_class":
+                    plt.plot(correct_X[-1], correct_Y[-1], '.', color=((np.dot(self.Y[i], 0.2) + 0.42) % 1,
+                                                                       (np.dot(self.Y[i], 0.8) + 0.77) % 1,
+                                                                       (np.dot(self.Y[i], 0.3) + 0.15) % 1), ms=10)
             else:
                 incorrect_X.append(self.X[i][0])
                 incorrect_Y.append(self.X[i][1])
+        if mode == "two_class":
+            plt.plot(correct_X, correct_Y, '.', color='g')
 
-        plt.plot(correct_X, correct_Y, '.', color='g')
         plt.plot(incorrect_X, incorrect_Y, '.', color='r')
         plt.plot(center_X, center_Y, 'o', color='b')
         plt.show()

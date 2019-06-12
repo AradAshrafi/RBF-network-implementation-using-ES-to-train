@@ -1,3 +1,6 @@
 *.xml
 *.pdf
 .idea
+Data
+*.xlsx
+*.csv

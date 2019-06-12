@@ -34,7 +34,7 @@ class FileOperator:
         data_len = len(data)
         np.random.shuffle(data)
         X_train, Y_train = separate_input_output(data[:int(data_len * train_ratio)])
-        X_test, Y_test = separate_input_output(data)
+        X_test, Y_test = separate_input_output(data[int(train_ratio * data_len):])
         return X_train, Y_train, X_test, Y_test
 
 

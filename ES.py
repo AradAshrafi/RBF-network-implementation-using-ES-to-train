@@ -22,7 +22,7 @@ def ES(train_data_input, train_data_output, MU, LAMBDA):
         __do_required_calculation_to_determine_loss(rbf=rbf, RBF_input=train_data_input, RBF_output=train_data_output)
 
     # MAIN LOOP OF EVOLUTIONARY STRATEGY ------------------------>
-    for i in range(100):
+    for i in range(2):
         print("iteration" + str(i))
         # now it's time to generate next generations and perform Evolutionary Strategy
         # parents will be chosen randomly
