@@ -6,7 +6,7 @@ import math
 class RBF:
     # inputs are in X outputs (Labels)are in Y
     # parameters are explained in README
-    def __init__(self, RBF_input, RBF_output, centers_number=10, V=None, GAMA=None):
+    def __init__(self, RBF_input=None, RBF_output=None, centers_number=10, V=None, GAMA=None):
         self.X = RBF_input  # vector of inputs (1D, 2D , ... nD)
         self.Y = RBF_output  # vector of corresponding outputs (labels)
 
@@ -20,7 +20,7 @@ class RBF:
                                                                 range(centers_number)])
         self.W = []  # vectors of weight between RBF and final output(y_prime)
         # np.asarray([random.random() for _ in range(len(self.V))])
-        self.G = np.zeros((len(self.X), len(self.V)))  # matrix of RBF outputs
+        self.G = np.zeros((len(self.X), len(self.V))) if (self.X is not None) else None  # matrix of RBF outputs
         self.Y_prime = []  # calculated output
         self.Loss = 0  # Error of last step
 
@@ -52,7 +52,7 @@ class RBF:
     def calculate_weights(self):
         self.W = np.dot(np.dot(np.linalg.inv(np.dot(self.G.T, self.G)), self.G.T), self.Y)
 
-    # for testing time ---------------------------------------------------------------------------->
+    # for after initialization and testing time ---------------------------------------------------------------------->
     def set_input(self, RBF_input):
         self.X = RBF_input
         self.G = np.zeros((len(self.X), len(self.V)))

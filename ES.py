@@ -19,22 +19,20 @@ def ES(train_data_input, train_data_output, MU, LAMBDA):
     for rbf in array_of_RBFS:
         # first we must do some math :D
         # to calculate proper inner amounts (like Loss) in RBF based on determined procedure
-        __do_required_calculation_to_determine_loss(rbf=rbf)
+        __do_required_calculation_to_determine_loss(rbf=rbf, RBF_input=train_data_input, RBF_output=train_data_output)
 
     # MAIN LOOP OF EVOLUTIONARY STRATEGY ------------------------>
     for i in range(150):
         print("iteration" + str(i))
         # now it's time to generate next generations and perform Evolutionary Strategy
         # parents will be chosen randomly
-        new_generation = __generate_new_generation(array_of_RBFS=array_of_RBFS, MU=MU, LAMBDA=LAMBDA,
-                                                   RBF_input=train_data_input, RBF_output=train_data_output)
-        # for new_child in new_generation:
-        #     # to calculate proper inner amounts (like Loss) in RBF based on determined procedure
-        #     __do_required_calculation_to_determine_loss(rbf=new_child)
+        new_generation = __generate_new_generation(array_of_RBFS=array_of_RBFS, MU=MU, LAMBDA=LAMBDA)
 
         # new Chromosomes will take place of current ones :(
         # Dream Theater - This Is The Life
-        array_of_RBFS = __evolution_selection(new_generation=new_generation, MU=MU)
+        array_of_RBFS = __evolution_selection_q_tournament(population_before_selection=new_generation,
+                                                           RBF_input=train_data_input, RBF_ouptput=train_data_output,
+                                                           ns=MU, Q=3)
 
         for remained_child in array_of_RBFS:
             print(remained_child.Loss)
@@ -44,11 +42,13 @@ def ES(train_data_input, train_data_output, MU, LAMBDA):
     return array_of_RBFS[0]
 
 
-def __do_required_calculation_to_determine_loss(rbf):
+def __do_required_calculation_to_determine_loss(rbf, RBF_input=None, RBF_output=None):
     # this checking statement is useful in picking new generation
     # if rbf.Loss isn't 0 it means that we have calculated this chromosome loss before
     if rbf.Loss != 0:
         return
+    rbf.set_input(RBF_input=RBF_input)
+    rbf.set_output(RBF_output=RBF_output)
     # first we calculate G matrix based on centers(v) and gama [formula is written in README ]
     rbf.calculate_G_matrix()
     # then we calculate weights based on G matrix [formula is written in README ]
@@ -63,34 +63,32 @@ def __do_required_calculation_to_determine_loss(rbf):
 # first iterate through all RBFs and make 2 children from each one (other parent will be chosen randomly)
 # so up to now we have 2*MU children
 # then I make more lambda - 2*MU children with completely random (I always choose lambda > 2m)
-def __generate_new_generation(array_of_RBFS, MU, LAMBDA, RBF_input, RBF_output):
+def __generate_new_generation(array_of_RBFS, MU, LAMBDA):
     new_generation = []
     for i in range(MU):
         first_parent = array_of_RBFS[i]
         second_parent = array_of_RBFS[random.randint(0, MU - 1)]
         third_parent = array_of_RBFS[random.randint(0, MU - 1)]
 
-        first_child = __new_child(first_parent=first_parent, second_parent=second_parent, RBF_input=RBF_input,
-                                  RBF_output=RBF_output) if (random.random() < crossover_prob) else first_parent
-        second_child = __new_child(first_parent=first_parent, second_parent=third_parent, RBF_input=RBF_input,
-                                   RBF_output=RBF_output) if (random.random() < crossover_prob) else first_parent
+        first_child = __new_child(first_parent=first_parent, second_parent=second_parent) if (
+                random.random() < crossover_prob) else first_parent
+        second_child = __new_child(first_parent=first_parent, second_parent=third_parent) if (
+                random.random() < crossover_prob) else first_parent
         new_generation.append(first_child)
         new_generation.append(second_child)
 
     for i in range(LAMBDA - 2 * MU):
         first_parent = array_of_RBFS[random.randint(0, MU - 1)]
         second_parent = array_of_RBFS[random.randint(0, MU - 1)]
-        new_generation.append(__new_child(first_parent=first_parent, second_parent=second_parent, RBF_input=RBF_input,
-                                          RBF_output=RBF_output))
+        new_generation.append(__new_child(first_parent=first_parent, second_parent=second_parent))
     return new_generation
 
 
 # create new child from it's parents
-def __new_child(first_parent, second_parent, RBF_input, RBF_output):
+def __new_child(first_parent, second_parent):
     new_child_chromosome = np.true_divide(np.add(first_parent.get_chromosome(), second_parent.get_chromosome()), 2)
     new_child_chromosome = __mutation(chromosome=new_child_chromosome)
-    new_child = RBF(RBF_input=RBF_input, RBF_output=RBF_output, GAMA=new_child_chromosome[0],
-                    V=new_child_chromosome[1])
+    new_child = RBF(GAMA=new_child_chromosome[0], V=new_child_chromosome[1])
     return new_child
 
 
@@ -109,23 +107,20 @@ def __mutation(chromosome):
 
 
 # evolution only selects in new generation because ES(MU, LAMBDA) and current generation all will die
-def __evolution_selection(new_generation, MU):
-    return __q_tournament(population_before_selection=new_generation, Q=3, ns=MU)
-
-
 # perform q tournament
-def __q_tournament(population_before_selection, Q, ns):
+def __evolution_selection_q_tournament(population_before_selection, RBF_input, RBF_ouptput, ns, Q=2):
     selected_population = []
     for i in range(ns):
         opponents = []
         for j in range(Q):
             opponent = population_before_selection[random.randint(0, len(population_before_selection) - 1)]
             # calculate loss of selected child
-            __do_required_calculation_to_determine_loss(opponent)
+            __do_required_calculation_to_determine_loss(opponent, RBF_input=RBF_input, RBF_output=RBF_ouptput)
             opponents.append(opponent)
         # best competitor will be chosen to stay alive
         opponents.sort(key=lambda x: x.Loss, reverse=False)
         selected_population.append(opponents[0])
     return selected_population
+
 # def __SUS_with_ranking():
 #     print()
