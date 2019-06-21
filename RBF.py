@@ -13,12 +13,12 @@ class RBF:
 
         # first we initialize it by giving random value
         # vector of centers, which has same size as inputs
-        self.V = V if (V is not None) else [random.uniform(0.1, 0.8) * RBF_input[int(random.random() * len(RBF_input))]
+        self.V = V if (V is not None) else [random.uniform(0.5, 1.5) * RBF_input[int(random.random() * len(RBF_input))]
                                             for _ in
                                             range(centers_number)]
 
         # vector of gama which is a scalar for each V
-        self.GAMA = GAMA if (GAMA is not None) else np.asarray([random.uniform(0, 0.01) for _ in
+        self.GAMA = GAMA if (GAMA is not None) else np.asarray([20 * random.uniform(0, 0.0005) for _ in
                                                                 range(centers_number)])
         self.W = []  # vectors of weight between RBF and final output(y_prime)
         # np.asarray([random.random() for _ in range(len(self.V))])
@@ -114,6 +114,7 @@ class RBF:
         incorrect_Y = []
         center_X = []
         center_Y = []
+
         for i in range(len(self.V)):
             center_X.append(self.V[i][0])
             center_Y.append(self.V[i][1])
@@ -123,6 +124,10 @@ class RBF:
                 accuracy_counter += 1
                 correct_X.append(self.X[i][0])
                 correct_Y.append(self.X[i][1])
+                if mode == "two_class":
+                    plt.plot(correct_X[-1], correct_Y[-1], '.', color=((np.dot(self.Y[i], 0.2) + 0.42) % 1,
+                                                                       (np.dot(self.Y[i], 0.8) + 0.77) % 1,
+                                                                       (np.dot(self.Y[i], 0.3) + 0.15) % 1), ms=10)
                 if mode != "two_class":
                     plt.plot(correct_X[-1], correct_Y[-1], '.', color=((np.dot(self.Y[i], 0.2) + 0.42) % 1,
                                                                        (np.dot(self.Y[i], 0.8) + 0.77) % 1,
@@ -130,11 +135,14 @@ class RBF:
             else:
                 incorrect_X.append(self.X[i][0])
                 incorrect_Y.append(self.X[i][1])
-        if mode == "two_class":
-            plt.plot(correct_X, correct_Y, '.', color='g')
+
+            ax = plt.gca()
+            for i in range(len(self.GAMA)):
+                c = plt.Circle((center_X[i], center_Y[i]), 10, facecolor="none", edgecolor='black')
+                ax.add_patch(c)
 
         plt.plot(incorrect_X, incorrect_Y, '.', color='r')
-        plt.plot(center_X, center_Y, 'o', color='b')
+        plt.plot(center_X, center_Y, '.', color='b')
         plt.show()
 
         accuracy = accuracy_counter / len(self.Y)

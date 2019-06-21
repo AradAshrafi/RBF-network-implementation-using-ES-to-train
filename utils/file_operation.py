@@ -32,9 +32,10 @@ class FileOperator:
     def get_test_train_data(self, train_ratio):
         data = self.__read_from_file()
         data_len = len(data)
+        test_data = np.copy(data)
         np.random.shuffle(data)
         X_train, Y_train = separate_input_output(data[:int(data_len * train_ratio)])
-        X_test, Y_test = separate_input_output(data[int(train_ratio * data_len):])
+        X_test, Y_test = separate_input_output(test_data)
         return X_train, Y_train, X_test, Y_test
 
 

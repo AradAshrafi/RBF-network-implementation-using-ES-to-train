@@ -2,18 +2,18 @@ import random
 from RBF import RBF
 import numpy as np
 
-mutation_prob = 0.45
-crossover_prob = 0.8
+mutation_prob = 0.6
+crossover_prob = 0.85
 
 
 # array of RBFs contain our desired chromosomes, V and ‫γ
 # actually MU is equal to length of RBF array
-def ES(train_data_input, train_data_output, MU, LAMBDA):
+def ES(train_data_input, train_data_output, MU, LAMBDA, number_of_centers, total_iterations):
     array_of_RBFS = []
 
     # INITIAL POPULATION ------------------>
     for i in range(MU):
-        rbf = RBF(RBF_input=train_data_input, RBF_output=train_data_output)
+        rbf = RBF(RBF_input=train_data_input, RBF_output=train_data_output, centers_number=number_of_centers)
         array_of_RBFS.append(rbf)
 
     for rbf in array_of_RBFS:
@@ -22,7 +22,7 @@ def ES(train_data_input, train_data_output, MU, LAMBDA):
         __do_required_calculation_to_determine_loss(rbf=rbf, RBF_input=train_data_input, RBF_output=train_data_output)
 
     # MAIN LOOP OF EVOLUTIONARY STRATEGY ------------------------>
-    for i in range(2):
+    for i in range(total_iterations):
         print("iteration" + str(i))
         # now it's time to generate next generations and perform Evolutionary Strategy
         # parents will be chosen randomly
@@ -101,11 +101,18 @@ def __mutation(chromosome):
         for i in range(2):
             # change one amount in gama vector
             index = random.randint(0, len(chromosome[0]) - 1)
-            chromosome[0][index] = np.multiply(chromosome[0][index], random.uniform(0.2, 2))
+            chromosome[0][index] = np.multiply(chromosome[0][index], random.uniform(0.5, 1.5))
+
+            index = random.randint(0, len(chromosome[0]) - 1)
+            chromosome[0][index] = np.multiply(chromosome[0][index], random.uniform(0.02, 0.1))
 
             # change one amount in V vector
             index = random.randint(0, len(chromosome[1]) - 1)
             chromosome[1][index] = np.multiply(chromosome[1][index], random.uniform(0.5, 1.5))
+
+            # change one amount in V vector
+            index = random.randint(0, len(chromosome[1]) - 1)
+            chromosome[1][index] = np.multiply(chromosome[1][index], random.uniform(0.2, 1.1))
     return chromosome
 
 
