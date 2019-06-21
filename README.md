@@ -35,7 +35,7 @@ functionality of this program :
   
  - [x] Reach High accuracy for two class </br>
     - [x] Show Results with current Architecture for Classification Problem
-    ![two class result](outputs/twoClass.png?raw=true "Title")
+    ![two class result](outputs/twoClassMode.png?raw=true "Title")
 
  - [x] Reach High accuracy for (multi class) classification </br>
     - [ ] loss function need to be more accurate
