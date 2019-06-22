@@ -26,6 +26,7 @@ functionality of this program :
     L is our loss function (to calculate error) <br/>
     ‫‪L(ŷ,y) = 1/2 - (ŷ - y)<sup>T</sup>(ŷ - y)
  - [x] Evolution Strategy algorithm with V(vector) and ‫‫‫‫‫‫‫γ(scalar) parameters
+    - [X] ES(MU, LAMBDA)
     - [ ] Mutation strategy needs to be more precise
     - [ ] alternative chromosome length
  - [x] Reach High accuracy for regression </br>
@@ -35,9 +36,10 @@ functionality of this program :
   
  - [x] Reach High accuracy for two class </br>
     - [x] Show Results with current Architecture for Classification Problem
-    ![two class result](outputs/twoClassMode.png?raw=true "Title")
+    ![binary classification result](outputs/twoClassMode.png?raw=true "Title")
 
  - [x] Reach High accuracy for (multi class) classification </br>
-    - [ ] loss function need to be more accurate
+    - [x] loss function need to be more accurate
 
+    ![classification result](outputs/5classes6centers.png?raw=true "Title")
 

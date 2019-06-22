@@ -13,12 +13,12 @@ class RBF:
 
         # first we initialize it by giving random value
         # vector of centers, which has same size as inputs
-        self.V = V if (V is not None) else [random.uniform(0.5, 1.5) * RBF_input[int(random.random() * len(RBF_input))]
+        self.V = V if (V is not None) else [random.uniform(0.4, 3) * RBF_input[int(random.random() * len(RBF_input))]
                                             for _ in
                                             range(centers_number)]
 
         # vector of gama which is a scalar for each V
-        self.GAMA = GAMA if (GAMA is not None) else np.asarray([20 * random.uniform(0, 0.0005) for _ in
+        self.GAMA = GAMA if (GAMA is not None) else np.asarray([20 * random.uniform(0, 0.0001) for _ in
                                                                 range(centers_number)])
         self.W = []  # vectors of weight between RBF and final output(y_prime)
         # np.asarray([random.random() for _ in range(len(self.V))])
@@ -49,8 +49,12 @@ class RBF:
         self.Y_prime = np.dot(self.G, self.W)
 
     # L =  1/2 * (transpose(Y' - Y)) * (Y' - Y)
-    def calculate_error(self):
-        self.Loss = 1 / 2 * np.dot((self.Y_prime - self.Y).T, (self.Y_prime - self.Y))
+    def calculate_error(self, mode):
+        if mode == "multi-class":
+            for i in range(len(self.Y_prime)):
+                self.Loss += abs(self.Y_prime - self.Y)
+        else:
+            self.Loss = 1 / 2 * np.dot((self.Y_prime - self.Y).T, (self.Y_prime - self.Y))
 
     # Calculate Weights Matrix based on formula written
     def calculate_weights(self):
